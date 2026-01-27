@@ -3,7 +3,6 @@ import PreFooter from '@/components/PreFooter';
 import { Button } from '@/components/ui/button';
 import { categories } from '@/data/categories';
 import { products } from '@/data/products';
-import CategoryCard from '@/components/CategoryCard';
 import ProductCard from '@/components/ProductCard';
 import {  ArrowRight } from 'lucide-react';
 import { HeroCarousel } from '@/components/HeroCarousel';

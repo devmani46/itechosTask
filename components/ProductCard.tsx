@@ -77,7 +77,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
     );
   }
 
-  // Grid View Layout (Original)
+  // Grid View Layout
   return (
     <Card className="group overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 rounded-3xl flex flex-col h-full bg-white">
       <CardContent className="p-0 relative aspect-square overflow-hidden bg-gray-50">

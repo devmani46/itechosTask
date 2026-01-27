@@ -18,7 +18,6 @@ export default function Breadcrumb() {
     let currentPath = '';
     paths.forEach((path) => {
       currentPath += `/${path}`;
-      // Capitalize and format the path segment
       const label = path
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))

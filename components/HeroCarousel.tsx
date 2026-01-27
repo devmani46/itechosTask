@@ -22,7 +22,6 @@ export function HeroCarousel() {
 
   const carouselProducts = products.slice(0, 5).map((product, index) => ({
     ...product,
-    // label is now in product data
     buttonText: index % 2 === 0 ? "Shop Now" : "Learn More"
   }))
 
