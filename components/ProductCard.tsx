@@ -48,7 +48,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="flex items-baseline gap-2 mt-auto">
-            <span className="text-lg font-bold text-gray-900">
+            <span className={`text-lg font-bold ${product.offerPrice ? 'text-blue-600' : 'text-gray-900'}`}>
                 Rs {product.offerPrice ? product.offerPrice.toLocaleString() : product.price.toLocaleString()}
             </span>
              {product.offerPrice && (

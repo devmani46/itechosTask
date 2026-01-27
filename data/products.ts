@@ -30,7 +30,6 @@ export const products: Product[] = [
     name: "Dell XPS 13",
     description: "Premium ultrabook with Intel i7 processor.",
     price: 190000,
-    offerPrice: 178000,
     rating: 5,
     ratingCount: 231,
     brand: "Dell",
@@ -85,6 +84,7 @@ export const products: Product[] = [
     brand: "Apple",
     category: "iPhones",
     image: "/images/products/iPhones.jpg",
+    label: "NEW ARRIVAL",
   },
   {
     id: "8",
@@ -170,6 +170,7 @@ export const products: Product[] = [
     brand: "Microsoft",
     category: "Gaming",
     image: "/images/products/Gaming.jpg",
+    label: "NEW ARRIVAL",
   },
   {
     id: "15",
