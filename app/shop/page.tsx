@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
@@ -23,6 +24,9 @@ type SortOption = 'popularity' | 'price-low' | 'price-high' | 'newest' | 'oldest
 type ViewMode = 'grid' | 'list';
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
   // categories and brands
   const categories = useMemo(() => Array.from(new Set(products.map(p => p.category))), []);
   const brands = useMemo(() => Array.from(new Set(products.map(p => p.brand))), []);
@@ -36,6 +40,19 @@ export default function ShopPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  // Apply category filter from URL on mount or when category param changes
+  useEffect(() => {
+    if (categoryParam) {
+      const filtered = products.filter(product => 
+        product.category.toLowerCase() === categoryParam.toLowerCase()
+      );
+      setFilteredProducts(filtered);
+      setCurrentPage(1);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [categoryParam]);
 
   // Sorting and Pagination Logic
   const sortedProducts = useMemo(() => {
@@ -108,6 +125,11 @@ export default function ShopPage() {
                    categories={categories}
                    brands={brands}
                    priceRange={[minPrice, maxPrice]}
+                   initialFilters={categoryParam ? {
+                     categories: [categoryParam],
+                     brands: [],
+                     priceRange: [minPrice, maxPrice]
+                   } : undefined}
                    onApplyFilters={handleApplyFilters}
                 />
               </div>
@@ -124,6 +146,11 @@ export default function ShopPage() {
                categories={categories}
                brands={brands}
                priceRange={[minPrice, maxPrice]}
+               initialFilters={categoryParam ? {
+                 categories: [categoryParam],
+                 brands: [],
+                 priceRange: [minPrice, maxPrice]
+               } : undefined}
                onApplyFilters={handleApplyFilters}
             />
           </div>
