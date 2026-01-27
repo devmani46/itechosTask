@@ -19,7 +19,7 @@ import {
 
 const ITEMS_PER_PAGE = 6;
 
-type SortOption = 'popularity' | 'price-low' | 'price-high' | 'newest';
+type SortOption = 'popularity' | 'price-low' | 'price-high' | 'newest' | 'oldest';
 type ViewMode = 'grid' | 'list';
 
 export default function ShopPage() {
@@ -46,10 +46,12 @@ export default function ShopPage() {
       case 'price-high':
         return sorted.sort((a, b) => b.price - a.price);
       case 'newest':
-        return sorted.sort((a, b) => b.id.localeCompare(a.id));
+        return sorted.sort((a, b) => Number(b.id) - Number(a.id));
+      case 'oldest':
+        return sorted.sort((a, b) => Number(a.id) - Number(b.id));
       case 'popularity':
       default:
-        return sorted;
+        return sorted.sort((a, b) => b.rating - a.rating);
     }
   }, [filteredProducts, sortBy]);
 
@@ -179,6 +181,7 @@ export default function ShopPage() {
                       <SelectItem value="price-low">Price: Low to High</SelectItem>
                       <SelectItem value="price-high">Price: High to Low</SelectItem>
                       <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="oldest">Oldest</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -200,8 +203,8 @@ export default function ShopPage() {
                     count={totalPages}
                     page={currentPage}
                     onChange={setCurrentPage}
-                    showFirstButton
-                    showLastButton
+                    // showFirstButton
+                    // showLastButton
                   />
                 </div>
               )}
