@@ -5,6 +5,7 @@ import { products } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
 import Pagination from '@/components/Pagination';
+import Breadcrumb from '@/components/Breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SlidersHorizontal, Grid3x3, List } from 'lucide-react';
@@ -83,6 +84,7 @@ export default function ShopPage() {
 
   return (
     <div className="container px-4 py-8 md:px-30 bg-gray-50">
+      <Breadcrumb />
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Smartphones & Gadgets</h1>
