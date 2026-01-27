@@ -4,12 +4,15 @@ import { useState, useMemo } from 'react';
 import { products } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
+import Pagination from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SlidersHorizontal } from 'lucide-react';
 
+const ITEMS_PER_PAGE = 6;
+
 export default function ShopPage() {
-  // Extract unique categories and brands
+  // categories and brands
   const categories = useMemo(() => Array.from(new Set(products.map(p => p.category))), []);
   const brands = useMemo(() => Array.from(new Set(products.map(p => p.brand))), []);
   
@@ -19,6 +22,14 @@ export default function ShopPage() {
 
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
 
   const handleApplyFilters = (filters: {
     categories: string[];
@@ -39,7 +50,8 @@ export default function ShopPage() {
     });
 
     setFilteredProducts(newFilteredProducts);
-    setIsFilterOpen(false); // Close mobile sheet on apply
+    setCurrentPage(1); 
+    setIsFilterOpen(false);
   };
 
   return (
@@ -89,11 +101,25 @@ export default function ShopPage() {
         {/* Product Grid */}
         <main className="flex-1">
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {paginatedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+              
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination 
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={setCurrentPage}
+                    showFirstButton
+                    showLastButton
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-20">
               <p className="text-lg text-muted-foreground">No products found matching your filters.</p>
