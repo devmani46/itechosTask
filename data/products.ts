@@ -170,7 +170,6 @@ export const products: Product[] = [
     brand: "Microsoft",
     category: "Gaming",
     image: "/images/products/Gaming.jpg",
-    label: "NEW ARRIVAL",
   },
   {
     id: "15",
