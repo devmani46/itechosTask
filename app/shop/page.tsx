@@ -7,9 +7,19 @@ import FilterSidebar from '@/components/FilterSidebar';
 import Pagination from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, Grid3x3, List } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ITEMS_PER_PAGE = 6;
+
+type SortOption = 'popularity' | 'price-low' | 'price-high' | 'newest';
+type ViewMode = 'grid' | 'list';
 
 export default function ShopPage() {
   // categories and brands
@@ -23,13 +33,30 @@ export default function ShopPage() {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<SortOption>('popularity');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  // Sorting and Pagination Logic
+  const sortedProducts = useMemo(() => {
+    const sorted = [...filteredProducts];
+    switch (sortBy) {
+      case 'price-low':
+        return sorted.sort((a, b) => a.price - b.price);
+      case 'price-high':
+        return sorted.sort((a, b) => b.price - a.price);
+      case 'newest':
+        return sorted.sort((a, b) => b.id.localeCompare(a.id));
+      case 'popularity':
+      default:
+        return sorted;
+    }
+  }, [filteredProducts, sortBy]);
+
+  const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredProducts, currentPage]);
+    return sortedProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [sortedProducts, currentPage]);
 
   const handleApplyFilters = (filters: {
     categories: string[];
@@ -102,6 +129,59 @@ export default function ShopPage() {
         <main className="flex-1">
           {filteredProducts.length > 0 ? (
             <>
+              {/* Sorting and View Controls */}
+              <div className="bg-white rounded-lg shadow-sm border p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
+                {/* View Toggle Buttons */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => setViewMode('grid')}
+                    className="h-9 w-9"
+                  >
+                    <Grid3x3 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => setViewMode('list')}
+                    className="h-9 w-9"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Product Count */}
+                <div className="text-sm text-muted-foreground">
+                  Showing{' '}
+                  <span className="font-medium text-foreground">
+                    {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                    {Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)}
+                  </span>{' '}
+                  of{' '}
+                  <span className="font-medium text-foreground">
+                    {sortedProducts.length}
+                  </span>{' '}
+                  products
+                </div>
+
+                {/* Sort Dropdown */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Sort by:</span>
+                  <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+                    <SelectTrigger className="w-[140px] h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="popularity">Popularity</SelectItem>
+                      <SelectItem value="price-low">Price: Low to High</SelectItem>
+                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="newest">Newest</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {paginatedProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
