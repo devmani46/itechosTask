@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
@@ -23,9 +23,10 @@ const ITEMS_PER_PAGE = 6;
 type SortOption = 'popularity' | 'price-low' | 'price-high' | 'newest' | 'oldest';
 type ViewMode = 'grid' | 'list';
 
-export default function ShopPage() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
 
   // categories and brands
   const categories = useMemo(() => Array.from(new Set(products.map(p => p.category))), []);
@@ -41,18 +42,27 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-  // Apply category filter from URL on mount or when category param changes
+  // Apply category and search filters from URL
   useEffect(() => {
+    let filtered = [...products];
+
+    // Apply category filter
     if (categoryParam) {
-      const filtered = products.filter(product => 
+      filtered = filtered.filter(product => 
         product.category.toLowerCase() === categoryParam.toLowerCase()
       );
-      setFilteredProducts(filtered);
-      setCurrentPage(1);
-    } else {
-      setFilteredProducts(products);
     }
-  }, [categoryParam]);
+
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
+    setCurrentPage(1);
+  }, [categoryParam, searchQuery]);
 
   // Sorting and Pagination Logic
   const sortedProducts = useMemo(() => {
@@ -106,9 +116,11 @@ export default function ShopPage() {
       <Breadcrumb />
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Smartphones & Gadgets</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {searchQuery ? `Search results for: "${searchQuery}"` : 'Smartphones & Gadgets'}
+          </h1>
           <p className="text-muted-foreground mt-2">
-            Discover {filteredProducts.length} premium products matching your lifestyle.
+            Discover {filteredProducts.length} premium products matching your {searchQuery ? 'search' : 'lifestyle'}.
           </p>
         </div>
         <div className="lg:hidden">
@@ -230,8 +242,6 @@ export default function ShopPage() {
                     count={totalPages}
                     page={currentPage}
                     onChange={setCurrentPage}
-                    // showFirstButton
-                    // showLastButton
                   />
                 </div>
               )}
@@ -251,5 +261,22 @@ export default function ShopPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="container px-4 py-8 md:px-30 bg-gray-50">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Loading products...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }
