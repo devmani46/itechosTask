@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import Image from "next/image"
+import { ProductImage } from "@/components/ui/product-image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -55,11 +55,12 @@ export function TrendingProducts() {
                   <CardContent className="p-4 flex flex-col h-full">
                     {/* Image Area */}
                     <div className="relative aspect-square rounded-3xl mb-1 overflow-hidden group">
-                        <Image
+                        <ProductImage
                             src={product.image}
                             alt={product.name}
                             fill
                             className="object-cover rounded-3xl transition-transform duration-300 group-hover:scale-105 pb-4"
+                            fallbackText={product.name}
                         />
                         
                         {/* Badges */}

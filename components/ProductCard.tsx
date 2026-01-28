@@ -2,7 +2,7 @@ import { Product } from '@/lib/types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
+import { ProductImage } from '@/components/ui/product-image';
 import { ShoppingCart } from 'lucide-react';
 
 interface ProductCardProps {
@@ -22,12 +22,13 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
         <div className="flex flex-col sm:flex-row">
           {/* Image Section */}
           <div className="relative w-full sm:w-64 h-64 sm:h-auto overflow-hidden bg-gray-50 shrink-0">
-            <Image
+            <ProductImage
               src={product.image}
               alt={product.name}
               fill
               className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
               sizes="(max-width: 640px) 100vw, 256px"
+              fallbackText={product.name}
             />
             
             <div className="absolute top-3 left-3 flex flex-col gap-1.5">
@@ -81,12 +82,13 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   return (
     <Card className="group overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 rounded-3xl flex flex-col h-full bg-white">
       <CardContent className="p-0 relative aspect-square overflow-hidden bg-gray-50">
-         <Image
+         <ProductImage
             src={product.image}
             alt={product.name}
             fill
             className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fallbackText={product.name}
           />
           
           <div className="absolute top-3 left-3 flex flex-col gap-1.5">

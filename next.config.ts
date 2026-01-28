@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-
-console.log("----------------------------------------------------------------");
-console.log("Build Configuration - BasePath:", basePath);
-console.log("----------------------------------------------------------------");
+const isProd = process.env.NODE_ENV === "production";
+const basePath = isProd ? "/itechosTask" : "";
 
 const nextConfig: NextConfig = {
   output: "export",
