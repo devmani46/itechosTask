@@ -112,153 +112,155 @@ function ShopContent() {
   };
 
   return (
-    <div className="container px-4 py-8 md:px-30 bg-gray-50">
-      <Breadcrumb />
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            {searchQuery ? `Search results for: "${searchQuery}"` : 'Smartphones & Gadgets'}
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Discover {filteredProducts.length} premium products matching your {searchQuery ? 'search' : 'lifestyle'}.
-          </p>
-        </div>
-        <div className="lg:hidden">
-          <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto">
-              <div className="py-6">
-                <FilterSidebar 
-                   categories={categories}
-                   brands={brands}
-                   priceRange={[minPrice, maxPrice]}
-                   initialFilters={categoryParam ? {
-                     categories: [categoryParam],
-                     brands: [],
-                     priceRange: [minPrice, maxPrice]
-                   } : undefined}
-                   onApplyFilters={handleApplyFilters}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-
-      <div className="flex gap-8">
-        {/* Sidebar - Desktop */}
-        <aside className="hidden lg:block w-72 flex-none">
-          <div className="sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto pr-2 custom-scrollbar">
-            <FilterSidebar 
-               categories={categories}
-               brands={brands}
-               priceRange={[minPrice, maxPrice]}
-               initialFilters={categoryParam ? {
-                 categories: [categoryParam],
-                 brands: [],
-                 priceRange: [minPrice, maxPrice]
-               } : undefined}
-               onApplyFilters={handleApplyFilters}
-            />
+    <div className="flex flex-col gap-16 pb-16 md:px-30 bg-gray-50 min-h-screen">
+      <div className="container px-4">
+        <Breadcrumb />
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {searchQuery ? `Search results for: "${searchQuery}"` : 'Smartphones & Gadgets'}
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Discover {filteredProducts.length} premium products matching your {searchQuery ? 'search' : 'lifestyle'}.
+            </p>
           </div>
-        </aside>
-
-        {/* Product Grid */}
-        <main className="flex-1">
-          {filteredProducts.length > 0 ? (
-            <>
-              {/* Sorting and View Controls */}
-              <div className="bg-white rounded-lg shadow-sm border p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
-                {/* View Toggle Buttons */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => setViewMode('grid')}
-                    className="h-9 w-9"
-                  >
-                    <Grid3x3 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => setViewMode('list')}
-                    className="h-9 w-9"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Product Count */}
-                <div className="text-sm text-muted-foreground">
-                  Showing{' '}
-                  <span className="font-medium text-foreground">
-                    {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
-                    {Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)}
-                  </span>{' '}
-                  of{' '}
-                  <span className="font-medium text-foreground">
-                    {sortedProducts.length}
-                  </span>{' '}
-                  products
-                </div>
-
-                {/* Sort Dropdown */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Sort by:</span>
-                  <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
-                    <SelectTrigger className="w-[140px] h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="popularity">Popularity</SelectItem>
-                      <SelectItem value="price-low">Price: Low to High</SelectItem>
-                      <SelectItem value="price-high">Price: High to Low</SelectItem>
-                      <SelectItem value="newest">Newest</SelectItem>
-                      <SelectItem value="oldest">Oldest</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className={
-                viewMode === 'grid' 
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-                  : "flex flex-col gap-4 mb-8"
-              }>
-                {paginatedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} viewMode={viewMode} />
-                ))}
-              </div>
-              
-              {totalPages > 1 && (
-                <div className="flex justify-center mt-8">
-                  <Pagination 
-                    count={totalPages}
-                    page={currentPage}
-                    onChange={setCurrentPage}
+          <div className="lg:hidden">
+            <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto">
+                <div className="py-6">
+                  <FilterSidebar 
+                     categories={categories}
+                     brands={brands}
+                     priceRange={[minPrice, maxPrice]}
+                     initialFilters={categoryParam ? {
+                       categories: [categoryParam],
+                       brands: [],
+                       priceRange: [minPrice, maxPrice]
+                     } : undefined}
+                     onApplyFilters={handleApplyFilters}
                   />
                 </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-lg text-muted-foreground">No products found matching your filters.</p>
-              <Button 
-                variant="link" 
-                onClick={() => setFilteredProducts(products)}
-                className="mt-2"
-              >
-                Clear all filters
-              </Button>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        <div className="flex gap-8">
+          {/* Sidebar - Desktop */}
+          <aside className="hidden lg:block w-72 flex-none">
+            <div className="sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto pr-2 custom-scrollbar">
+              <FilterSidebar 
+                 categories={categories}
+                 brands={brands}
+                 priceRange={[minPrice, maxPrice]}
+                 initialFilters={categoryParam ? {
+                   categories: [categoryParam],
+                   brands: [],
+                   priceRange: [minPrice, maxPrice]
+                 } : undefined}
+                 onApplyFilters={handleApplyFilters}
+              />
             </div>
-          )}
-        </main>
+          </aside>
+
+          {/* Product Grid */}
+          <main className="flex-1 bg-gray-50">
+            {filteredProducts.length > 0 ? (
+              <>
+                {/* Sorting and View Controls */}
+                <div className="bg-white rounded-lg shadow-sm border p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
+                  {/* View Toggle Buttons */}
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'outline'}
+                      size="icon"
+                      onClick={() => setViewMode('grid')}
+                      className="h-9 w-9"
+                    >
+                      <Grid3x3 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'outline'}
+                      size="icon"
+                      onClick={() => setViewMode('list')}
+                      className="h-9 w-9"
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* Product Count */}
+                  <div className="text-sm text-muted-foreground">
+                    Showing{' '}
+                    <span className="font-medium text-foreground">
+                      {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                      {Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)}
+                    </span>{' '}
+                    of{' '}
+                    <span className="font-medium text-foreground">
+                      {sortedProducts.length}
+                    </span>{' '}
+                    products
+                  </div>
+
+                  {/* Sort Dropdown */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Sort by:</span>
+                    <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+                      <SelectTrigger className="w-[140px] h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="popularity">Popularity</SelectItem>
+                        <SelectItem value="price-low">Price: Low to High</SelectItem>
+                        <SelectItem value="price-high">Price: High to Low</SelectItem>
+                        <SelectItem value="newest">Newest</SelectItem>
+                        <SelectItem value="oldest">Oldest</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className={
+                  viewMode === 'grid' 
+                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+                    : "flex flex-col gap-4 mb-8"
+                }>
+                  {paginatedProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} viewMode={viewMode} />
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="flex justify-center mt-8">
+                    <Pagination 
+                      count={totalPages}
+                      page={currentPage}
+                      onChange={setCurrentPage}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-20">
+                <p className="text-lg text-muted-foreground">No products found matching your filters.</p>
+                <Button 
+                  variant="link" 
+                  onClick={() => setFilteredProducts(products)}
+                  className="mt-2"
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );
@@ -267,7 +269,7 @@ function ShopContent() {
 export default function ShopPage() {
   return (
     <Suspense fallback={
-      <div className="container px-4 py-8 md:px-30 bg-gray-50">
+      <div className="flex flex-col gap-16 pb-16 md:px-30 bg-gray-50 min-h-screen">
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
