@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+console.log("----------------------------------------------------------------");
+console.log("Build Configuration - BasePath:", basePath);
+console.log("----------------------------------------------------------------");
+
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  basePath: basePath,
+  assetPrefix: basePath,
   images: {
     unoptimized: true,
     remotePatterns: [
